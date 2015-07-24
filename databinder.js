@@ -2,30 +2,42 @@
 
   var $ = document.querySelectorAll.bind(document);
 
-  // @options object
-  var DataBinder = function ( options ) {
+  var DataBinder = function (config) {
+    var callbacks = config.callbacks;
 
-    var config = {
-      template: 'singleBrackets'
-    };
-
-    helpers.extend(config, options);
+    for (callback in callbacks) {
+      if (config.callbacks.hasOwnProperty(callback)) {
+        if (typeof callbacks[callback] === 'function') {
+          this[callback] = callbacks[callback];
+        }
+      }
+    }
 
     this.$el = $(config.el)[0];
     this.model = {};
-    this.template = config.template;
     this.regexp = /(?:\{)(?:[^\}]*)(?:\})/gm; // { anything }
     this.templateString = this.$el.innerHTML;
 
+    if (this.onInit) {
+      this.onInit();
+    }
+
+    // update the model initially
     this.update(config.model);
   };
 
-  // @model object
-  DataBinder.prototype.update = function (model) {
-    helpers.extend(this.model, model);
 
+  DataBinder.prototype.update = function (changes) {
+    if (this.onUpdate) {
+      changes = this.onUpdate(changes);
+    }
+
+    helpers.extend(this.model, changes);
+
+    // render immediately after changes to the model
     this.render();
   };
+
 
   DataBinder.prototype.render = function () {
     var self, props, renderedString;
@@ -48,6 +60,10 @@
       [].slice.call($('[data-template]')).forEach(function(element) {
         element.removeAttribute('data-template');
       });
+    }
+
+    if (this.onRender) {
+      this.onRender();
     }
   }
 

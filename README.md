@@ -1,41 +1,46 @@
 # DataBinder
-A tiny tool for one-way data binding.
+A small and pretty simple tool for data binding. No dependencies, written in pure JavaScript, supports IE8+.
 
 ## Usage
-```html
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>DataBinder demo</title>
+[Visit JSFiddle demo](https://jsfiddle.net/63oehr4y/)
 
-  <style>
-    /* prevent the data templates to be shown unrendered */
-    [data-template] {
-      display: none;
-    }
-  </style>
-</head>
-<body>
+## API
+```javascript
+// creating new instance of DataBinder
 
-<!-- create the template -->
-<div class="greeting" data-template>Hello, { name }!</div>
+var config = {
+  // string
+  // selector that specifies the DOM element to bind
+  el: '.widget__title',
 
-<!-- include databinder.min.js -->
-<script src="path_to/databinder.min.js"></script>
+  // object
+  // specifies the data to bind
+  model: {},
 
-<!-- bind the data -->
-<script>
-var greeting = new Databinder({
-  el: '.data',
-  model: {
-    name: 'Andrew'
+  // object
+  // specifies callbacks that will be called after initializing, updating or rendering
+  // all callbacks have access to current DataBinder instance by using `this` keyword
+  callbacks: {
+    onInit:   function() {},
+    onUpdate: function(changes) {
+      // some manipulations with changes object
+      return changes;
+    },
+    onRender: function() {}
   }
-});
-</script>
+}
 
-</body>
-</html>
+var binding = new DataBinder(config);
+
+// updating the model
+// will cause rendering immediately
+binding.update({
+  title: 'Ads'
+});
+
+// rendering the model
+// useless because of automatic calling of this method immediately after updating the model
+binding.render();
 ```
 
 ## License
