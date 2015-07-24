@@ -2,7 +2,7 @@
 A small and pretty simple tool for data binding. No dependencies, written in pure JavaScript, supports IE8+.
 
 ## Usage
-[Visit JSFiddle demo](https://jsfiddle.net/63oehr4y/)
+[Visit JSFiddle demo](https://jsfiddle.net/63oehr4y/2/)
 
 ## API
 ```javascript
